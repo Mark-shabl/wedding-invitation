@@ -1,0 +1,38 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./backend:/app
+      - ./uploads:/app/uploads
+    command: air -c .air.toml
+    environment:
+      GIN_MODE: debug
+
+  frontend-public:
+    build:
+      context: ./frontend-public
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./frontend-public:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      API_INTERNAL_URL: http://backend:8080
+      WATCHPACK_POLLING: "true"
+    command: npm run dev
+
+  frontend-admin:
+    build:
+      context: ./frontend-admin
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./frontend-admin:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      API_INTERNAL_URL: http://backend:8080
+      NEXT_PUBLIC_PUBLIC_URL: http://localhost:3000
+      WATCHPACK_POLLING: "true"
+    command: npm run dev -- -p 3001

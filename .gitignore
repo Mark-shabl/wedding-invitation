@@ -1,0 +1,16 @@
+.env
+node_modules/
+.next/
+backend/tmp/
+uploads/*
+!uploads/.gitkeep
+*.exe
+
+# IDE
+.idea/
+.vscode/
+.cursor/
+
+# OS
+Thumbs.db
+.DS_Store
