@@ -7,7 +7,7 @@ Monorepo для свадебных приглашений: публичная с
 - **frontend-public** (:3000) — Next.js 14, shadcn/ui, TanStack Query, Framer Motion
 - **frontend-admin** (:3001) — Next.js 14, shadcn/ui, TanStack Query
 - **backend** (:8080) — Go, Gin, GORM, JWT, Redis, Prometheus, Swagger
-- **PostgreSQL** (:5432), **Redis** (:6379)
+- **PostgreSQL**, **Redis** — только внутри Docker-сети (без конфликта портов на сервере)
 
 ## Быстрый старт (Docker + hot-reload)
 
@@ -27,6 +27,10 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 | Metrics | http://localhost:8080/metrics |
 
 **Логин админки:** `admin` / `admin123` (из `.env`)
+
+> PostgreSQL и Redis **не пробрасываются** на хост по умолчанию — backend подключается по именам `postgres` / `redis` внутри сети Docker. Это избегает ошибки `port is already allocated`, если на сервере уже запущен Redis (6379) или PostgreSQL (5432).
+>
+> Для локальной отладки БД в dev-режиме порты доступны через override: PostgreSQL **5433**, Redis **6380** (можно переопределить через `POSTGRES_HOST_PORT` / `REDIS_HOST_PORT` в `.env`).
 
 ## Локальная разработка без Docker
 
