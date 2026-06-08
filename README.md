@@ -79,10 +79,41 @@ NEXT_PUBLIC_API_URL=http://localhost:8080 NEXT_PUBLIC_PUBLIC_URL=http://localhos
 
 Ссылки на гостей смотрите в админке → **Гости** → «Копировать ссылку».
 
-## Production
+## Production (сервер)
+
+**На сервере используйте только prod-режим — без `docker-compose.dev.yml`!**
+
+Dev-режим монтирует `node_modules` с хоста и часто падает с `input/output error` на overlay2.
 
 ```bash
-docker compose up --build -d
+cp .env.example .env
+# отредактируйте .env: JWT_SECRET, ADMIN_PASSWORD, PUBLIC_URL, ADMIN_URL, CORS_ORIGINS
+
+sudo docker compose down
+sudo docker compose up --build -d
+sudo docker compose ps
 ```
 
-Измените `JWT_SECRET`, пароли и URL в `.env` перед деплоем.
+Если были ошибки I/O — очистите Docker и пересоберите:
+
+```bash
+sudo docker compose down -v
+sudo docker system prune -af
+sudo docker compose up --build -d
+```
+
+Проверьте место на диске: `df -h`
+
+| Сервис | Порт |
+|--------|------|
+| Приглашение | 3000 |
+| Админка | 3001 |
+| API | 8080 |
+
+## Локальная разработка (hot-reload)
+
+Только для локальной машины разработчика:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+```
