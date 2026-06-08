@@ -104,6 +104,20 @@ sudo docker compose up --build -d
 
 Проверьте место на диске: `df -h`
 
+**Минимум ~5 GB свободного места** для сборки всех образов (Go + 2× Next.js).
+
+Если сборка падает с `no space left on device`:
+
+```bash
+df -h
+sudo docker system df
+sudo docker system prune -af --volumes
+df -h
+sudo docker compose up --build -d
+```
+
+`docker system prune -af --volumes` удалит неиспользуемые образы и volumes. **Данные PostgreSQL будут удалены**, если volume не нужен — после этого seed создаст данные заново.
+
 | Сервис | Порт |
 |--------|------|
 | Приглашение | 3000 |
